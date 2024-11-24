@@ -3,14 +3,24 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Stop } from "../types/Stop";
 import moment from "moment";
+import { Container, Typography, List, ListItem, Button } from "@mui/material";
+import SaveStopDialog from "../components/SaveStopDialog";
 
 // Dynamically import the Map component with no SSR
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
-const TripsPage = () => {
+const TripsPage = ({
+  toggleTheme,
+  mode,
+}: {
+  toggleTheme: () => void;
+  mode: "light" | "dark";
+}) => {
   const [shapes, setShapes] = useState([]);
   const [stops, setStops] = useState<Stop[]>([]);
   const [selectedStopTimes, setSelectedStopTimes] = useState([]);
+  const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchStops = async () => {
@@ -40,20 +50,50 @@ const TripsPage = () => {
     setSelectedStopTimes(formattedTimes);
   };
 
+  const handleSaveStop = (stop: Stop) => {
+    setSelectedStop(stop);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setSelectedStop(null);
+  };
+
+  const handleDialogSave = (stop: Stop, name: string, icon: string) => {
+    const savedStops = JSON.parse(localStorage.getItem("savedStops") || "[]");
+    if (
+      !savedStops.some((savedStop: Stop) => savedStop.stop_id === stop.stop_id)
+    ) {
+      savedStops.push({ ...stop, name, icon });
+      localStorage.setItem("savedStops", JSON.stringify(savedStops));
+    }
+    handleDialogClose();
+  };
+
   return (
-    <div>
-      <h1>Map</h1>
+    <Container>
+      <Typography variant="h1">Map</Typography>
       <Map shapes={shapes} stops={stops} onStopSelect={handleStopSelect} />
-      <h2>Upcoming Trips</h2>
-      <ul>
+      <Typography variant="h2">Upcoming Trips</Typography>
+      <List>
         {selectedStopTimes.map((time: any) => (
-          <li key={time.trip_id}>
-            Trip ID: {time.trip_id}, Arrival Time: {time.formattedArrivalTime}{" "}
-            {time.isSameDay ? "" : "(Next Day)"}
-          </li>
+          <ListItem key={time.trip_id}>
+            <Typography>
+              Trip ID: {time.trip_id}, Arrival Time: {time.formattedArrivalTime}{" "}
+              {time.isSameDay ? "" : "(Next Day)"}
+            </Typography>
+            <Button onClick={() => handleSaveStop(time.stop)}>Save Stop</Button>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+      <SaveStopDialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        onSave={handleDialogSave}
+        stop={selectedStop}
+      />
+    </Container>
   );
 };
 

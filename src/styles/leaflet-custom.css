@@ -1,0 +1,19 @@
+/* styles/leaflet-custom.css */
+.leaflet-container {
+  background: var(--leaflet-background);
+  color: var(--leaflet-color);
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--leaflet-popup-background);
+  color: var(--leaflet-popup-color);
+}
+
+.leaflet-popup-tip {
+  background: var(--leaflet-popup-background);
+}
+
+.leaflet-control {
+  background: var(--leaflet-control-background);
+  color: var(--leaflet-control-color);
+}
