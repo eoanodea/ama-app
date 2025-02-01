@@ -1,10 +1,10 @@
 // src/pages/index.tsx
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { Stop } from "../types/Stop";
 import moment from "moment";
-import { Container, Typography, List, ListItem, Button } from "@mui/material";
-import SaveStopDialog from "../components/SaveStopDialog";
+import { Container, Typography, List, ListItem } from "@mui/material";
 
 // Dynamically import the Map component with no SSR
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
@@ -16,11 +16,10 @@ const TripsPage = ({
   toggleTheme: () => void;
   mode: "light" | "dark";
 }) => {
+  const router = useRouter();
   const [shapes, setShapes] = useState([]);
   const [stops, setStops] = useState<Stop[]>([]);
   const [selectedStopTimes, setSelectedStopTimes] = useState([]);
-  const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchStops = async () => {
@@ -32,43 +31,8 @@ const TripsPage = ({
     fetchStops();
   }, []);
 
-  const handleStopSelect = async (stopId: string) => {
-    const response = await fetch(`/api/times?stop_id=${stopId}&limit=6`);
-    const data = await response.json();
-    const formattedTimes = data.map((time: any) => {
-      const arrivalTime = moment(time.arrival_time);
-      const now = moment();
-      const isSameDay = arrivalTime.isSame(now, "day");
-      return {
-        ...time,
-        formattedArrivalTime: arrivalTime.format(
-          "dddd, MMMM Do YYYY, h:mm:ss a"
-        ),
-        isSameDay,
-      };
-    });
-    setSelectedStopTimes(formattedTimes);
-  };
-
-  const handleSaveStop = (stop: Stop) => {
-    setSelectedStop(stop);
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setSelectedStop(null);
-  };
-
-  const handleDialogSave = (stop: Stop, name: string, icon: string) => {
-    const savedStops = JSON.parse(localStorage.getItem("savedStops") || "[]");
-    if (
-      !savedStops.some((savedStop: Stop) => savedStop.stop_id === stop.stop_id)
-    ) {
-      savedStops.push({ ...stop, name, icon });
-      localStorage.setItem("savedStops", JSON.stringify(savedStops));
-    }
-    handleDialogClose();
+  const handleStopSelect = (stopId: string) => {
+    router.push(`/stop/${stopId}`);
   };
 
   return (
@@ -83,16 +47,9 @@ const TripsPage = ({
               Trip ID: {time.trip_id}, Arrival Time: {time.formattedArrivalTime}{" "}
               {time.isSameDay ? "" : "(Next Day)"}
             </Typography>
-            <Button onClick={() => handleSaveStop(time.stop)}>Save Stop</Button>
           </ListItem>
         ))}
       </List>
-      <SaveStopDialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        onSave={handleDialogSave}
-        stop={selectedStop}
-      />
     </Container>
   );
 };

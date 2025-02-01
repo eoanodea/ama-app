@@ -1,62 +1,49 @@
 // src/components/Map.tsx
-import {
-  MapContainer,
-  TileLayer,
-  Polyline,
-  Marker,
-  Popup,
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import "react-leaflet-markercluster/dist/styles.min.css";
-import { Shape } from "../types/Shape";
-import { Stop } from "../types/Stop";
 import L from "leaflet";
+import { Stop } from "../types/Stop";
+import "leaflet/dist/leaflet.css";
 
-// Import the default icon images
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-// Set the default icon options
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x.src,
-  iconUrl: markerIcon.src,
-  shadowUrl: markerShadow.src,
+// Define custom icons
+const customIcon = L.icon({
+  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+  shadowSize: [41, 41],
 });
 
 interface MapProps {
-  shapes: Shape[];
+  shapes: any[];
   stops: Stop[];
   onStopSelect: (stopId: string) => void;
+  center?: [number, number]; // Add center prop
 }
 
-const Map = ({ shapes, stops, onStopSelect }: MapProps) => {
-  const positions = shapes.map((shape) => [
-    shape.shape_pt_lat,
-    shape.shape_pt_lon,
-  ]);
-
-  const defaultCenter: [number, number] = [
-    42.350734353567674, 13.403534889221193,
-  ];
-
+const Map = ({
+  shapes,
+  stops,
+  onStopSelect,
+  center = [42.354, 13.391],
+}: MapProps) => {
   return (
     <MapContainer
-      center={defaultCenter}
+      center={center}
       zoom={13}
-      style={{ height: "500px", width: "100%" }}
+      style={{ height: "500px", width: "100%" }} // Set a fixed height for the map
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      <Polyline positions={positions} color="blue" />
       <MarkerClusterGroup>
         {stops.map((stop) => (
           <Marker
             key={stop.stop_id}
             position={[stop.stop_lat, stop.stop_lon]}
+            icon={customIcon}
             eventHandlers={{
               click: () => {
                 onStopSelect(stop.stop_id);

@@ -4,4 +4,6 @@ export interface Stop {
   stop_name: string;
   stop_lat: number;
   stop_lon: number;
+  name?: string;
+  icon?: string;
 }
