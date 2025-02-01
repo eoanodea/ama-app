@@ -83,18 +83,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     setMode((prevMode) => (prevMode === "dark" ? "light" : "dark"));
   };
 
-  const now = moment()
-    .startOf("week")
-    .add(1, "days")
-    .hour(9)
-    .minute(0)
-    .second(0);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar toggleTheme={toggleTheme} mode={mode} />
-      Time: {now.format("dddd, MMMM Do YYYY, h:mm:ss a")}
       <Component {...pageProps} toggleTheme={toggleTheme} mode={mode} />
     </ThemeProvider>
   );

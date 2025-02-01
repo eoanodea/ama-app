@@ -26,6 +26,7 @@ const BottomNavbar = ({
         bottom: 0,
         left: 0,
         right: 0,
+        zIndex: 1,
         backgroundColor: theme.palette.background.paper,
       }}
       elevation={3}
