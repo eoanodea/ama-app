@@ -5,11 +5,15 @@ import path from "path";
 
 const routesFilePath = path.resolve("data/routes.txt");
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const routes = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const routes = await readCSV(routesFilePath);
     res.status(200).json(routes);
   } catch (error) {
-    res.status(500).json({ error: "Failed to load routes data" });
+    res
+      .status(500)
+      .json({ error: "Failed to load routes data", message: error });
   }
 };
+
+export default routes;

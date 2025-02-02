@@ -1,36 +1,18 @@
-// src/pages/index.tsx
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { Stop } from "../types/Stop";
 import moment from "moment";
-import {
-  Container,
-  Typography,
-  List,
-  ListItem,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Typography, List, ListItem } from "@mui/material";
 import styled from "@emotion/styled";
 import Search from "@/components/Search";
 
-// Dynamically import the Map component with no SSR
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
 const StyledHomePageContainer = styled.div`
   position: relative;
 `;
 
-const TripsPage = ({
-  toggleTheme,
-  mode,
-}: {
-  toggleTheme: () => void;
-  mode: "light" | "dark";
-}) => {
-  const router = useRouter();
-  const [shapes, setShapes] = useState([]);
+const TripsPage = ({ mode }: { mode: "light" | "dark" }) => {
   const [stops, setStops] = useState<Stop[]>([]);
   const [selectedStopTimes, setSelectedStopTimes] = useState([]);
   const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
@@ -74,7 +56,6 @@ const TripsPage = ({
       <Search setMapCenter={setMapCenter} />
 
       <Map
-        shapes={shapes}
         stops={stops}
         onStopSelect={handleStopSelect}
         center={mapCenter}

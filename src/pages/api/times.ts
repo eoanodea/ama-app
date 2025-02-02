@@ -9,7 +9,7 @@ import moment from "moment";
 const timesFilePath = path.resolve("data/stop_times.txt");
 const tripsFilePath = path.resolve("data/trips.txt");
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const times = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const times = (await readCSV(timesFilePath)) as StopTime[];
     const trips = (await readCSV(tripsFilePath)) as Trip[];
@@ -46,6 +46,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.status(200).json(upcomingBusesWithTrips);
   } catch (error) {
-    res.status(500).json({ error: "Failed to load stop times data" });
+    res
+      .status(500)
+      .json({ error: "Failed to load stop times data", message: error });
   }
 };
+
+export default times;

@@ -1,10 +1,9 @@
 // src/pages/favorites.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, type JSX } from "react";
 import {
   Container,
   Typography,
   List,
-  ListItem,
   Button,
   ListItemIcon,
   ListItemButton,
@@ -38,11 +37,9 @@ const FavoritesPage = () => {
       <Typography variant="h1">Favorited Bus Stops</Typography>
       <List>
         {savedStops.map((stop) => (
-          // <Link key={stop.stop_id} href={`/stop/${stop.stop_id}`} passHref>
           <ListItemButton
             component={Link}
             href={`/stop/${stop.stop_id}`}
-            // button
             key={stop.stop_id}
           >
             {stop.icon && <ListItemIcon>{iconMap[stop.icon]}</ListItemIcon>}
@@ -53,7 +50,6 @@ const FavoritesPage = () => {
               Remove
             </Button>
           </ListItemButton>
-          // </Link>
         ))}
       </List>
     </Container>

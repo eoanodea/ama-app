@@ -1,14 +1,10 @@
 import {
-  Button,
-  TextField,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemButton,
   Paper,
   InputBase,
   IconButton,
   Divider,
+  ListItemButton,
+  ListItemText,
 } from "@mui/material";
 import { useCallback, useState } from "react";
 import debounce from "lodash.debounce";
@@ -66,7 +62,7 @@ const Search = ({ setMapCenter }: IProps) => {
 
   const debouncedHandleSearch = useCallback(
     debounce((query: string) => handleSearch(query), 500),
-    []
+    [handleSearch]
   );
 
   return (
@@ -77,14 +73,30 @@ const Search = ({ setMapCenter }: IProps) => {
         sx={{ ml: 1, flex: 1 }}
         placeholder="Search Google Maps"
         inputProps={{ "aria-label": "search google maps" }}
+        value={searchQuery}
+        onChange={handleChange}
       />
-      <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+      <IconButton
+        type="button"
+        sx={{ p: "10px" }}
+        aria-label="search"
+        onClick={handleButtonClick}
+      >
         <SearchIcon />
       </IconButton>
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
       <IconButton color="primary" sx={{ p: "10px" }} aria-label="directions">
         <Directions />
       </IconButton>
+      {searchResults.map((result) => (
+        <ListItemButton
+          // button
+          key={result.place_id}
+          onClick={() => handleResultClick(result.lat, result.lon)}
+        >
+          <ListItemText primary={result.display_name} />
+        </ListItemButton>
+      ))}
     </StyledSearchContainer>
   );
 };

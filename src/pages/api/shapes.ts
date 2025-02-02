@@ -6,7 +6,7 @@ import { Shape } from "../../types/Shape";
 
 const shapesFilePath = path.resolve("data/shapes.txt");
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const shapes = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const shapes = (await readCSV(shapesFilePath)) as Shape[];
     const { shape_id } = req.query;
@@ -17,6 +17,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.status(200).json(filteredShapes);
   } catch (error) {
-    res.status(500).json({ error: "Failed to load shapes data" });
+    res
+      .status(500)
+      .json({ error: "Failed to load shapes data", message: error });
   }
 };
+
+export default shapes;

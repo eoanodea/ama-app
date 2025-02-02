@@ -15,7 +15,9 @@ const Navbar = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return isMobile ? (
-    <BottomNavbar toggleTheme={toggleTheme} mode={mode} />
+    <BottomNavbar
+    // toggleTheme={toggleTheme} mode={mode}
+    />
   ) : (
     <AppBar
       position="static"

@@ -1,3 +1,4 @@
+import { Trip } from "@/types/trip";
 import { useState, useEffect } from "react";
 
 interface Route {
@@ -29,9 +30,9 @@ const TripSearch = ({
 
     const fetchServices = async () => {
       const response = await fetch("/api/trips");
-      const data = await response.json();
+      const data: Trip[] = await response.json();
       const uniqueServices = Array.from(
-        new Set(data.map((trip: any) => trip.service_id))
+        new Set(data.map((trip) => trip.service_id))
       );
       setServices(uniqueServices.map((id: string) => ({ service_id: id })));
     };

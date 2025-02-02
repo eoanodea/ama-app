@@ -16,11 +16,15 @@ const getStops = async () => {
   });
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const stops = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const stops = await getStops();
     res.status(200).json(stops);
   } catch (error) {
-    res.status(500).json({ error: "Failed to load stops data" });
+    res
+      .status(500)
+      .json({ error: "Failed to load stops data", message: error });
   }
 };
+
+export default stops;

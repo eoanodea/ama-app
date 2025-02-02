@@ -6,12 +6,12 @@ import { Trip } from "@/types/trip";
 
 const tripsFilePath = path.resolve("data/trips.txt");
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const trips = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const trips = (await readCSV(tripsFilePath)) as Trip[];
     const { route_id, service_id } = req.query;
 
-    const filteredTrips = trips.filter((trip: any) => {
+    const filteredTrips = trips.filter((trip) => {
       return (
         (!route_id || trip.route_id === route_id) &&
         (!service_id || trip.service_id === service_id)
@@ -20,6 +20,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.status(200).json(filteredTrips);
   } catch (error) {
-    res.status(500).json({ error: "Failed to load trips data" });
+    res
+      .status(500)
+      .json({ error: "Failed to load trips data", message: error });
   }
 };
+
+export default trips;

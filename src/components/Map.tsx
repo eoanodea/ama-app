@@ -1,4 +1,3 @@
-// src/components/Map.tsx
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
@@ -17,7 +16,6 @@ const customIcon = L.icon({
 });
 
 interface MapProps {
-  shapes: any[];
   stops: Stop[];
   onStopSelect: (stopId: string) => void;
   center?: [number, number]; // Add center prop
@@ -25,7 +23,6 @@ interface MapProps {
 }
 
 const Map = ({
-  shapes,
   stops,
   onStopSelect,
   center = [42.354, 13.391],
@@ -36,7 +33,7 @@ const Map = ({
     mode === "dark"
       ? "eoan/cm6mr92gz002y01sg4xmwan54"
       : "eoan/cm6mqrgi800k601qr0p8k0qx5";
-  // mapbox://styles/eoan/cm6mr92gz002y01sg4xmwan54
+
   return (
     <MapContainer
       center={center}

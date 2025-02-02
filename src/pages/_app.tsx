@@ -4,10 +4,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
-import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
-import "react-leaflet-markercluster/dist/styles.min.css"; // Import MarkerCluster CSS
+import "leaflet/dist/leaflet.css";
 import "../styles/leaflet-custom.css"; // Import custom Leaflet styles
-import moment from "moment";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [mode, setMode] = useState<"light" | "dark">("dark");

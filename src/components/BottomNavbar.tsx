@@ -1,21 +1,9 @@
-// src/components/BottomNavbar.tsx
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Paper,
-  Switch,
-} from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { Home, Favorite } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material";
 
-const BottomNavbar = ({
-  toggleTheme,
-  mode,
-}: {
-  toggleTheme: () => void;
-  mode: "light" | "dark";
-}) => {
+const BottomNavbar = () => {
   const router = useRouter();
   const theme = useTheme();
 
