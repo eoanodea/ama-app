@@ -74,7 +74,7 @@ const Search = ({ setMapCenter }: IProps) => {
   const handleButtonClick = () => {
     if (searchResults.length > 0) {
       const { lat, lon } = searchResults[0];
-      setMapCenter([parseFloat(lat), parseFloat(lon)]);
+      setMapCenter([parseFloat(lat), parseFloat(lon), 12]);
       setSearchResults([]);
     }
   };
@@ -87,7 +87,7 @@ const Search = ({ setMapCenter }: IProps) => {
         setSearchResults([]);
       }
     }, 500),
-    [handleSearch]
+    [handleSearch, setSearchResults]
   );
 
   const clearSearchResults = () => {

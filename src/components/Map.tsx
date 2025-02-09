@@ -25,7 +25,7 @@ const customIcon = L.icon({
 interface MapProps {
   stops: Stop[];
   onStopSelect: (stopId: string) => void;
-  center?: [number, number]; // Add center prop
+  center?: [number, number, number]; // Add center prop
   mode: "light" | "dark";
 }
 
@@ -53,7 +53,7 @@ const Map = ({
       }} // Set a fixed height for the map
       zoomControl={false}
     >
-      <UpdateMapCenter center={center} />
+      <UpdateMapCenter center={[center[0], center[1]]} />
       <TileLayer
         url={`https://api.mapbox.com/styles/v1/${mapStyle}/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> contributors'
@@ -85,7 +85,7 @@ const UpdateMapCenter = ({ center }: { center: [number, number] }) => {
 
   useEffect(() => {
     map.setView(center, map.getZoom());
-  }, [center]);
+  }, [center, map]);
 
   return null;
 };

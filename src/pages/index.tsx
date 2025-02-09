@@ -24,12 +24,12 @@ const TripsPage = () => {
   const [stops, setStops] = useState<Stop[]>([]);
   const [selectedStopTimes, setSelectedStopTimes] = useState([]);
   const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
-  const [mapCenter, setMapCenter] = useState<[number, number, zoom]>([
+  const [mapCenter, setMapCenter] = useState<[number, number, number]>([
     42.354, 13.391, 15,
   ]);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { mode, toggleMode, isFavorite, addFavorite, removeFavorite } =
+  const { mode, isFavorite, addFavorite, removeFavorite } =
     useContext(AppContext);
 
   useEffect(() => {
