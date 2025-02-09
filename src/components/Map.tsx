@@ -1,4 +1,11 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  ZoomControl,
+} from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
 import { Stop } from "../types/Stop";
@@ -25,7 +32,7 @@ interface MapProps {
 const Map = ({
   stops,
   onStopSelect,
-  center = [42.354, 13.391],
+  center = [42.354, 13.391, 15],
   mode,
 }: MapProps) => {
   const mapboxAccessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -36,20 +43,22 @@ const Map = ({
 
   return (
     <MapContainer
-      center={center}
-      zoom={15}
+      center={[center[0], center[1]]}
+      zoom={center[2]}
       style={{
-        height: "100vh",
+        height: "91vh",
         width: "100%",
         zIndex: 0,
         position: "relative",
       }} // Set a fixed height for the map
+      zoomControl={false}
     >
       <UpdateMapCenter center={center} />
       <TileLayer
         url={`https://api.mapbox.com/styles/v1/${mapStyle}/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> contributors'
       />
+      <ZoomControl position="bottomright" />
       {/* mapbox://styles/eoan/cm6mqrgi800k601qr0p8k0qx5 */}
       {/* <TileLayer
       
@@ -58,18 +67,11 @@ const Map = ({
       /> */}
       <MarkerClusterGroup>
         {stops.map((stop) => (
-          <Marker
+          <ClickableMarker
             key={stop.stop_id}
-            position={[stop.stop_lat, stop.stop_lon]}
-            icon={customIcon}
-            eventHandlers={{
-              click: () => {
-                onStopSelect(stop.stop_id);
-              },
-            }}
-          >
-            <Popup>{stop.stop_name}</Popup>
-          </Marker>
+            stop={stop}
+            onStopSelect={onStopSelect}
+          />
         ))}
       </MarkerClusterGroup>
     </MapContainer>
@@ -86,4 +88,31 @@ const UpdateMapCenter = ({ center }: { center: [number, number] }) => {
   }, [center]);
 
   return null;
+};
+
+const ClickableMarker = ({
+  stop,
+  onStopSelect,
+}: {
+  stop: Stop;
+  onStopSelect: (stopId: string) => void;
+}) => {
+  const map = useMap();
+  const handleClick = () => {
+    // Call any additional logic
+    onStopSelect(stop.stop_id);
+    // Zoom in on marker at zoom level 18 (adjust as needed)
+    map.setView([stop.stop_lat, stop.stop_lon], 18);
+  };
+
+  return (
+    <Marker
+      key={stop.stop_id}
+      position={[stop.stop_lat, stop.stop_lon]}
+      icon={customIcon}
+      eventHandlers={{ click: handleClick }}
+    >
+      <Popup>{stop.stop_name}</Popup>
+    </Marker>
+  );
 };

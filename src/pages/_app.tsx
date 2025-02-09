@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
 import "leaflet/dist/leaflet.css";
 import "../styles/leaflet-custom.css"; // Import custom Leaflet styles
+import { AppProvider } from "../providers/AppProvider";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [mode, setMode] = useState<"light" | "dark">("dark");
@@ -82,11 +83,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Navbar toggleTheme={toggleTheme} mode={mode} />
-      <Component {...pageProps} toggleTheme={toggleTheme} mode={mode} />
-    </ThemeProvider>
+    <AppProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Navbar toggleTheme={toggleTheme} mode={mode} />
+        <Component {...pageProps} toggleTheme={toggleTheme} mode={mode} />
+      </ThemeProvider>
+    </AppProvider>
   );
 };
 
